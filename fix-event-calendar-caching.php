@@ -18,7 +18,7 @@ function fix_event_cal_init() {
 
         //embed the version number of the Event Cal plugin in the static js name
         $jsFile = __DIR__ . "/event-cal-$version.js";
-        $originalUrl = get_site_url() . "/?ai1ec_render_js=common_frontend&is_backend=false&ver=2.1.9"; //This is where we can load the original dynamic js
+        $originalUrl = get_site_url() . "/?ai1ec_render_js=common_frontend&is_backend=false&ver=$version"; //This is where we can load the original dynamic js
         if (!file_exists($jsFile)) {//first time running or first time since a new version of the event calendar
             file_put_contents($jsFile, file_get_contents($originalUrl));
         }
