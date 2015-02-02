@@ -1,5 +1,5 @@
 === Plugin Name ===
-Contributors: (this should be a list of wordpress.org userid's)
+Contributors: DanielMahaffy
 Tags: calendar, javascript, cache
 Requires at least: 4.1
 Tested up to: 4.1
