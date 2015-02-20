@@ -29,7 +29,21 @@ there may be features of the event calendar that do not work with this plugin.
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. The plugin needs write access to it's folder to create the static js file.
 
+== Frequently Asked Questions ==
+
+= How can I clear/update the cached javascript? =
+
+Anytime the All-In-One Event Calendar settings are saved, the cached javascript is recreated.
+You can also clear the cache by deleting the event-cal-x.x.x.js file in the plugin folder.
+A new version of the All-In-One Event Calendar will also trigger a new cached javascript.
+
 == Changelog ==
+
+= 1.2.0 =
+* Cached javascript is now cleared when the event calendar settings are updated
+* Refactored code to improve code reuse
+* Added hash to cached javascript url to ensure it loads the most recent version
+* Plugin now uses the AI1EC_VERSION constant to load the version number
 
 = 1.0.1 =
 * Added sanity check before creating cache file
