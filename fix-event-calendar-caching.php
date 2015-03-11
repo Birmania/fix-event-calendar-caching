@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Fix Event Calendar Caching
  * Description: This plugin makes the All-in-One Event Calendar's javascript cacheable to improve page load speed.
- * Version: 1.2.0
+ * Version: 2.0.0
  * Author: Daniel Mahaffy
  * License: GPLv2 or later
  */

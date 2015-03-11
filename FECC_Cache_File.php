@@ -2,7 +2,7 @@
 class FECC_Cache_File {
 
     private static $messages = array();
-
+    
     /**
      * 
      * @param bool $absolute
@@ -10,21 +10,24 @@ class FECC_Cache_File {
      */
     public static function getFileName($absolute = true) {
         $version = self::getAllInOneEventCalVersionNumber();
-        $file = "event-cal-$version.js";
+        $hash = sha1(self::getOriginalJavascriptUrl());
+        $file = "event-cal-$version-$hash.js";
         if ($absolute) {
             return __DIR__ . '/' . $file;
         } else {
             return $file;
         }
     }
-
+    
     /**
      * 
      * @return string Absolute url of the original Event Calendar dynamic javascript
      */
     public static function getOriginalJavascriptUrl() {
         $version = self::getAllInOneEventCalVersionNumber();
-        return get_site_url() . "/?ai1ec_render_js=common_frontend&is_backend=false&ver=$version"; //This is where we can load the original dynamic js
+        global $wp_scripts;
+        $original = $wp_scripts->registered['ai1ec_requirejs']->src;
+        return $original . "&ver=$version";//This is where we can load the original dynamic js
     }
 
     /**
@@ -70,9 +73,10 @@ class FECC_Cache_File {
      */
     public static function enqueueCachedJavascript() {
         if (self::isCached()) {//only replace javascript if we were able to create the cache file.
+            $filename = self::getFileName(false);
             $hash = substr(hash_file('sha256', self::getFileName()), 0, 10);
             wp_dequeue_script('ai1ec_requirejs'); //remove the dynamic js script
-            wp_enqueue_script('event_cal_replace', plugins_url(self::getFileName(false), __FILE__) . "?hash=$hash", array(), null, true); //add our static js
+            wp_enqueue_script('event_cal_replace', plugins_url($filename, __FILE__) . "?hash=$hash", array(), null, true); //add our static js
             return true;
         }
         return false;
@@ -82,19 +86,20 @@ class FECC_Cache_File {
      * Enqueue an admin message
      * 
      * @param string $message
+     * @param string $type one of "updated", "error", or "update-nag"
      */
-    public static function addAdminMessage($message) {
-        self::$messages[] = $message;
+    public static function addAdminMessage($message, $type = 'updated') {
+        self::$messages[] = array('type'=>$type,'message'=>$message);
     }
-
+    
     /**
      * Function to print the admin messages.
      */
     public static function printAdminMessages() {
         foreach (self::$messages as $message) {
             ?>
-            <div class="updated">
-                <p><?php echo $message; ?></p>
+            <div class="<?php echo $message['type'];?>">
+                <p>Fix Event Cal Plugin: <?php echo $message['message']; ?></p>
             </div>
             <?php
         }

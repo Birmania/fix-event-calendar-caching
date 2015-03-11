@@ -39,6 +39,11 @@ A new version of the All-In-One Event Calendar will also trigger a new cached ja
 
 == Changelog ==
 
+= 2.0.0 =
+* Fixed problems with the calendar pages.  A bug was preventing agenda, week, and day view
+from working properly.
+* Creates a unique cache file for each event-calendar javascript link
+
 = 1.2.0 =
 * Cached javascript is now cleared when the event calendar settings are updated
 * Refactored code to improve code reuse
