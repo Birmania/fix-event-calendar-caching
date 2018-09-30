@@ -54,13 +54,30 @@ class FECC_Cache_File {
      * @return boolean true on success. false on failure.
      */
     public static function createCacheFile() {
-        $javascript = file_get_contents(self::getOriginalJavascriptUrl());
+        $javascript = self::getRemoteJavascript(self::getOriginalJavascriptUrl());
         if ($javascript) {//make sure we were able to load the javascript
             if (file_put_contents(self::getFileName(), $javascript)) {
                 return true;
             }
         }
         return false;
+    }
+    
+    /**
+    * Allow to get a remote url content from CURL
+    * param url : The url to request
+    * Return string the url body
+    */
+    public static function getRemoteJavascript($url) {
+        $ch_rech = curl_init(); // Init curl
+        curl_setopt($ch_rech, CURLOPT_URL, $url); // Set the URL to get
+        curl_setopt($ch_rech, CURLOPT_HEADER, 0); // Do not put HEADER in the response
+        ob_start(); // Open the buffer
+        curl_exec($ch_rech); // Execute the request
+        curl_close($ch_rech); // Quit curl
+        $result = ob_get_contents(); // Save the result content
+        ob_end_clean(); // Empty the buffer
+        return $result;
     }
 
     public static function isCached() {

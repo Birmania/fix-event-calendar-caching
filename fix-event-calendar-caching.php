@@ -20,6 +20,7 @@ function fix_event_cal_init() {
  * Call our funciton.  The event cal plugin doesn't enqueue it's script until 
  * the wp_footer, so we need to use that action too.
  */
+ add_action('admin_footer', 'fix_event_cal_init', 19);
 add_action('wp_footer', 'fix_event_cal_init', 19);
 
 /**
