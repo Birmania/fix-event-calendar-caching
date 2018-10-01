@@ -27,7 +27,7 @@ class FECC_Cache_File {
         $version = self::getAllInOneEventCalVersionNumber();
         global $wp_scripts;
         $original = $wp_scripts->registered['ai1ec_requirejs']->src;
-        return $original . "&ver=$version";//This is where we can load the original dynamic js
+        return $original . "?ver=$version";//This is where we can load the original dynamic js
     }
 
     /**
