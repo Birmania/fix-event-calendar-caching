@@ -72,6 +72,7 @@ class FECC_Cache_File {
         $ch_rech = curl_init(); // Init curl
         curl_setopt($ch_rech, CURLOPT_URL, $url); // Set the URL to get
         curl_setopt($ch_rech, CURLOPT_HEADER, 0); // Do not put HEADER in the response
+        curl_setopt($ch_rech, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 6.1; rv:19.0) Gecko/20100101 Firefox/19.0"); // Set a normal user agent to avoid being forbidden to access remote resource
         ob_start(); // Open the buffer
         curl_exec($ch_rech); // Execute the request
         curl_close($ch_rech); // Quit curl
