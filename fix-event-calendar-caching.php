@@ -20,14 +20,14 @@ function fix_event_cal_init() {
  * Call our funciton.  The event cal plugin doesn't enqueue it's script until 
  * the wp_footer, so we need to use that action too.
  */
- add_action('admin_footer', 'fix_event_cal_init', 19);
+add_action('admin_footer', 'fix_event_cal_init', 19);
 add_action('wp_footer', 'fix_event_cal_init', 19);
 
 /**
  * Clear the cache when the calendar settings are changed.
  */
 function fix_event_cal_settings_updated(){
-    FECC_Cache_File::createCacheFile();
+    FECC_Cache_File::clearCacheFiles();
     FECC_Cache_File::addAdminMessage("Event Calendar javascript cache cleared.");
 }
 add_action('ai1ec_settings_updated','fix_event_cal_settings_updated');

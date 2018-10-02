@@ -8,14 +8,14 @@ class FECC_Cache_File {
      * @param bool $absolute
      * @return string The file name of the cache file
      */
-    public static function getFileName($absolute = true) {
+    public static function getFileName($local = true) {
         $version = self::getAllInOneEventCalVersionNumber();
         $hash = sha1(self::getOriginalJavascriptUrl());
-        $file = "event-cal-$version-$hash.js";
-        if ($absolute) {
-            return __DIR__ . '/' . $file;
+        $file = "js_cache/event-cal-$version-$hash.js";
+        if ($local) {
+            return plugin_dir_path( __FILE__ ) . $file;
         } else {
-            return $file;
+            return plugins_url($file, __FILE__);
         }
     }
     
@@ -27,7 +27,7 @@ class FECC_Cache_File {
         $version = self::getAllInOneEventCalVersionNumber();
         global $wp_scripts;
         $original = $wp_scripts->registered['ai1ec_requirejs']->src;
-        return $original . "?ver=$version";//This is where we can load the original dynamic js
+        return add_query_arg( 'ver', $version, $original ); //This is where we can load the original dynamic js
     }
 
     /**
@@ -64,6 +64,19 @@ class FECC_Cache_File {
     }
     
     /**
+     * Clear cache directory
+     * 
+     * @return Nothing.
+     */
+    public static function clearCacheFiles() {
+      $files = glob(plugin_dir_path( __FILE__ ) . 'js_cache/*.js'); //get all file names
+      foreach($files as $file){
+          if(is_file($file))
+          unlink($file); //delete file
+      }
+    }
+    
+    /**
     * Allow to get a remote url content from CURL
     * param url : The url to request
     * Return string the url body
@@ -91,10 +104,9 @@ class FECC_Cache_File {
      */
     public static function enqueueCachedJavascript() {
         if (self::isCached()) {//only replace javascript if we were able to create the cache file.
-            $filename = self::getFileName(false);
             $hash = substr(hash_file('sha256', self::getFileName()), 0, 10);
             wp_dequeue_script('ai1ec_requirejs'); //remove the dynamic js script
-            wp_enqueue_script('event_cal_replace', plugins_url($filename, __FILE__) . "?hash=$hash", array(), null, true); //add our static js
+            wp_enqueue_script('event_cal_replace', add_query_arg("hash", $hash, self::getFileName(false)), array(), null, true); //add our static js
             return true;
         }
         return false;
